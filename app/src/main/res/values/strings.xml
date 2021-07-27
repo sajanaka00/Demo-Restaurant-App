@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Demo Restaurant App</string>
+    <string name="cost_effective">Cost Effective</string>
+    <string name="bit_pricer">Bit Pricer</string>
+    <string name="big_spender">Big Spender</string>
+</resources>

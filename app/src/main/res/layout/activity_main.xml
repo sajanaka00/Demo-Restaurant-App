@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <SearchView
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="25dp"
+                android:queryHint="Search" />
+
+            <TextView
+                android:id="@+id/costEffective"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_bar"
+                android:layout_marginStart="25dp"
+                android:text="@string/cost_effective"
+                android:textSize="32sp"
+                android:fontFamily="@font/allan_bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/costEffectiveRV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/costEffective"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:scrollbars="horizontal" />
+
+            <TextView
+                android:id="@+id/bitPricer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/costEffectiveRV"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="25dp"
+                android:text="@string/bit_pricer"
+                android:textSize="32sp"
+                android:fontFamily="@font/allan_bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/bitPricerRV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bitPricer"
+                android:orientation="horizontal"
+                android:scrollbars="horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="25dp"/>
+
+            <TextView
+                android:id="@+id/bigSpender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/bitPricerRV"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="25dp"
+                android:text="@string/big_spender"
+                android:textSize="32sp"
+                android:fontFamily="@font/allan_bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/bigSpenderRV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bigSpender"
+                android:orientation="horizontal"
+                android:scrollbars="horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="25dp"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>
