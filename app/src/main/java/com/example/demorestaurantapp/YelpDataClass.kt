@@ -12,7 +12,8 @@ data class YelpRestaurants(
     val rating: String,
     @SerializedName("review_count") val numReviews: Int,
     @SerializedName("image_url") val imageUrl: String,
-    val categories: List<YelpCategory>
+//    val categories: List<YelpCategory>,
+    val price: String
 )
 
 data class YelpCategory(

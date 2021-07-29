@@ -13,7 +13,7 @@ class RestaurantsAdapter(val context: Context, val restaurants: List<YelpRestaur
     RecyclerView.Adapter<RestaurantsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_main_pg, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_restaurants, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
