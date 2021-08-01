@@ -29,9 +29,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/search_bar"
+                android:fontFamily="@font/marcellus_sc"
                 android:text="@string/cost_effective"
-                android:textSize="32sp"
-                android:fontFamily="@font/allan_bold"/>
+                android:textSize="32sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/costEffectiveRV"
@@ -49,7 +49,7 @@
                 android:layout_marginTop="15dp"
                 android:text="@string/bit_pricer"
                 android:textSize="32sp"
-                android:fontFamily="@font/allan_bold"/>
+                android:fontFamily="@font/marcellus_sc"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/bitPricerRV"
@@ -67,7 +67,7 @@
                 android:layout_marginTop="15dp"
                 android:text="@string/big_spender"
                 android:textSize="32sp"
-                android:fontFamily="@font/allan_bold"/>
+                android:fontFamily="@font/marcellus_sc"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/bigSpenderRV"

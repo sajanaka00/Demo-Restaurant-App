@@ -1,9 +1,10 @@
 package com.example.demorestaurantapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.HorizontalScrollView
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val TAG = "MainActivity"
 private const val BASE_URL = "https://api.yelp.com/v3/"
 private const val API_KEY = "ImI1man5FXDZTZz2g7mmZ3_ChOU55GqU7OFfFaBj6ObY_E5s9_OAmz2dpQcUdlGV1dwqnE-GMLudXpUxjUxNl--BCb0SJaXPYTbSnI8l9mibhGf2raVwcfkUCOb_YHYx"
+const val RESTAURANT_ID = "RESTAURANT_ID"
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,30 +41,46 @@ class MainActivity : AppCompatActivity() {
         rvBigSpender = findViewById(R.id.bigSpenderRV)
         searchBar = findViewById(R.id.search_bar)
 
-        val costEffectiveAdapter = RestaurantsAdapter(this, costEffectiveList)
         rvCostEffective.layoutManager = LinearLayoutManager(this)
+        val costEffectiveAdapter = RestaurantsAdapter(this, costEffectiveList, object : RestaurantsAdapter.OnClickListener {
+            override fun onItemClick(position: Int) {
+                // When the user taps on a view in RV, navigate to new activity
+                val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
+                intent.putExtra(RESTAURANT_ID, restaurants[position].id)
+                startActivity(intent)
+            }
+        })
+
         rvCostEffective.adapter = costEffectiveAdapter
 
-        val bitPricerAdapter = RestaurantsAdapter(this, bitPricerList)
         rvBitPricer.layoutManager = LinearLayoutManager(this)
+        val bitPricerAdapter = RestaurantsAdapter(this, bitPricerList, object : RestaurantsAdapter.OnClickListener {
+            override fun onItemClick(position: Int) {
+                // When the user taps on a view in RV, navigate to new activity
+                val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
+                intent.putExtra(RESTAURANT_ID, restaurants[position].id)
+                startActivity(intent)            }
+        })
         rvBitPricer.adapter = bitPricerAdapter
 
-        val bigSpenderAdapter = RestaurantsAdapter(this, bigSpenderList)
         rvBigSpender.layoutManager = LinearLayoutManager(this)
+        val bigSpenderAdapter = RestaurantsAdapter(this, bigSpenderList, object : RestaurantsAdapter.OnClickListener {
+            override fun onItemClick(position: Int) {
+                // When the user taps on a view in RV, navigate to new activity
+                val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
+                intent.putExtra(RESTAURANT_ID, restaurants[position].id)
+                startActivity(intent)            }
+        })
         rvBigSpender.adapter = bigSpenderAdapter
-
-        val query: String = searchBar.query.toString()
-        println(query)
 
         val retrofit =
             Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        val yelpService = retrofit.create(YelpService::class.java)
+        val yelpService = retrofit.create(YelpFusionService::class.java)
 
-        //  yelpService.searchRestaurants("Bearer $API_KEY", query).enqueue(object : Callback<YelpSearchResult> {
-
-        yelpService.searchRestaurants("Bearer $API_KEY", "Fish", "New York").enqueue(object : Callback<YelpSearchResult> {
+        yelpService.searchRestaurants("Bearer $API_KEY", "Cake", "New York")
+            .enqueue(object : Callback<YelpSearchResult> {
             override fun onResponse(call: Call<YelpSearchResult>, response: Response<YelpSearchResult>) {
                 Log.i(TAG, "onResponse $response")
                 val body = response.body()
@@ -74,6 +92,8 @@ class MainActivity : AppCompatActivity() {
 //                println(restaurants)
                 categorizeItems(restaurants)
                 costEffectiveAdapter.notifyDataSetChanged()
+                bitPricerAdapter.notifyDataSetChanged()
+                bigSpenderAdapter.notifyDataSetChanged()
             }
 
             override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
