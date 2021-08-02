@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,7 +40,12 @@ class MainActivity : AppCompatActivity() {
         rvBigSpender = findViewById(R.id.bigSpenderRV)
         searchBar = findViewById(R.id.search_bar)
 
-        rvCostEffective.layoutManager = LinearLayoutManager(this)
+//        rvCostEffective.layoutManager = LinearLayoutManager(this)
+
+        val costEffLayoutManager = LinearLayoutManager(applicationContext)
+        costEffLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        rvCostEffective.layoutManager = costEffLayoutManager
+
         val costEffectiveAdapter = RestaurantsAdapter(this, costEffectiveList, object : RestaurantsAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 // When the user taps on a view in RV, navigate to new activity
@@ -50,10 +54,12 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         })
-
         rvCostEffective.adapter = costEffectiveAdapter
 
-        rvBitPricer.layoutManager = LinearLayoutManager(this)
+        val bitPricerLayoutManager = LinearLayoutManager(applicationContext)
+        bitPricerLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        rvBitPricer.layoutManager = bitPricerLayoutManager
+
         val bitPricerAdapter = RestaurantsAdapter(this, bitPricerList, object : RestaurantsAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 // When the user taps on a view in RV, navigate to new activity
@@ -63,7 +69,10 @@ class MainActivity : AppCompatActivity() {
         })
         rvBitPricer.adapter = bitPricerAdapter
 
-        rvBigSpender.layoutManager = LinearLayoutManager(this)
+        val bigSpenderLayoutManager = LinearLayoutManager(applicationContext)
+        bigSpenderLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        rvBigSpender.layoutManager = bigSpenderLayoutManager
+
         val bigSpenderAdapter = RestaurantsAdapter(this, bigSpenderList, object : RestaurantsAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
                 // When the user taps on a view in RV, navigate to new activity
@@ -79,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         val yelpService = retrofit.create(YelpFusionService::class.java)
 
-        yelpService.searchRestaurants("Bearer $API_KEY", "Cake", "New York")
+        yelpService.searchRestaurants("Bearer $API_KEY", "Pizza", "New York")
             .enqueue(object : Callback<YelpSearchResult> {
             override fun onResponse(call: Call<YelpSearchResult>, response: Response<YelpSearchResult>) {
                 Log.i(TAG, "onResponse $response")
