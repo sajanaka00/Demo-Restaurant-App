@@ -6,7 +6,7 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface YelpFusionService {
+interface YelpService {
 
     @GET("businesses/search")
     fun searchRestaurants(

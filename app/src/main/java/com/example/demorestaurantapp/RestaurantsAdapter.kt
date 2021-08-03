@@ -10,8 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-private const val TAG = "RestaurantsAdapter"
-
 class RestaurantsAdapter(val context: Context,
                          private val restaurants: List<YelpRestaurants>,
                          private val onClickListener: OnClickListener)

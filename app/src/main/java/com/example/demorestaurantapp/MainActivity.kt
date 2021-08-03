@@ -3,8 +3,11 @@ package com.example.demorestaurantapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -26,10 +29,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchBar: SearchView
 
     val restaurants = mutableListOf<YelpRestaurants>()
+    private lateinit var retrofit : Retrofit
+    private lateinit var yelpService : YelpService
+
+    private lateinit var costEffectiveAdapter : RestaurantsAdapter
+    private lateinit var bitPricerAdapter : RestaurantsAdapter
+    private lateinit var bigSpenderAdapter : RestaurantsAdapter
 
     private val costEffectiveList = ArrayList<YelpRestaurants>()
     private val bitPricerList = ArrayList<YelpRestaurants>()
     private val bigSpenderList = ArrayList<YelpRestaurants>()
+
+    private var searchTerm = "Pizza"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,17 +51,22 @@ class MainActivity : AppCompatActivity() {
         rvBigSpender = findViewById(R.id.bigSpenderRV)
         searchBar = findViewById(R.id.search_bar)
 
-//        rvCostEffective.layoutManager = LinearLayoutManager(this)
+        retrofit =
+            Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
+                .build()
+        yelpService = retrofit.create(YelpService::class.java)
+
+        getRestaurants()
+        searchRestaurants()
 
         val costEffLayoutManager = LinearLayoutManager(applicationContext)
         costEffLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rvCostEffective.layoutManager = costEffLayoutManager
 
-        val costEffectiveAdapter = RestaurantsAdapter(this, costEffectiveList, object : RestaurantsAdapter.OnClickListener {
+        costEffectiveAdapter = RestaurantsAdapter(this, costEffectiveList, object : RestaurantsAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
-                // When the user taps on a view in RV, navigate to new activity
                 val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
-                intent.putExtra(RESTAURANT_ID, restaurants[position].id)
+                intent.putExtra(RESTAURANT_ID, costEffectiveList[position].id)
                 startActivity(intent)
             }
         })
@@ -60,12 +76,12 @@ class MainActivity : AppCompatActivity() {
         bitPricerLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rvBitPricer.layoutManager = bitPricerLayoutManager
 
-        val bitPricerAdapter = RestaurantsAdapter(this, bitPricerList, object : RestaurantsAdapter.OnClickListener {
+        bitPricerAdapter = RestaurantsAdapter(this, bitPricerList, object : RestaurantsAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
-                // When the user taps on a view in RV, navigate to new activity
                 val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
-                intent.putExtra(RESTAURANT_ID, restaurants[position].id)
-                startActivity(intent)            }
+                intent.putExtra(RESTAURANT_ID, bitPricerList[position].id)
+                startActivity(intent)
+            }
         })
         rvBitPricer.adapter = bitPricerAdapter
 
@@ -73,46 +89,49 @@ class MainActivity : AppCompatActivity() {
         bigSpenderLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rvBigSpender.layoutManager = bigSpenderLayoutManager
 
-        val bigSpenderAdapter = RestaurantsAdapter(this, bigSpenderList, object : RestaurantsAdapter.OnClickListener {
+        bigSpenderAdapter = RestaurantsAdapter(this, bigSpenderList, object : RestaurantsAdapter.OnClickListener {
             override fun onItemClick(position: Int) {
-                // When the user taps on a view in RV, navigate to new activity
                 val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
-                intent.putExtra(RESTAURANT_ID, restaurants[position].id)
-                startActivity(intent)            }
+                intent.putExtra(RESTAURANT_ID, bigSpenderList[position].id)
+                startActivity(intent)
+            }
         })
         rvBigSpender.adapter = bigSpenderAdapter
+    }
 
-        val retrofit =
-            Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-        val yelpService = retrofit.create(YelpFusionService::class.java)
-
-        yelpService.searchRestaurants("Bearer $API_KEY", "Pizza", "New York")
+    private fun getRestaurants() {
+        yelpService.searchRestaurants("Bearer $API_KEY", searchTerm, "New York")
             .enqueue(object : Callback<YelpSearchResult> {
-            override fun onResponse(call: Call<YelpSearchResult>, response: Response<YelpSearchResult>) {
-                Log.i(TAG, "onResponse $response")
-                val body = response.body()
-                if (body == null) {
-                    Log.w(TAG, "Did not receive valid response body from Yelp API...")
-                    return
-                }
-                restaurants.addAll(body.restaurants)
+                override fun onResponse(
+                    call: Call<YelpSearchResult>,
+                    response: Response<YelpSearchResult>
+                ) {
+                    Log.i(TAG, "onResponse $response")
+                    val body = response.body()
+                    if (body == null) {
+                        Log.w(TAG, "Did not receive valid response body from Yelp API")
+                        return
+                    }
+                    restaurants.clear()
+                    restaurants.addAll(body.restaurants)
 //                println(restaurants)
-                categorizeItems(restaurants)
-                costEffectiveAdapter.notifyDataSetChanged()
-                bitPricerAdapter.notifyDataSetChanged()
-                bigSpenderAdapter.notifyDataSetChanged()
-            }
+                    categorizeItems(restaurants)
+                    costEffectiveAdapter.notifyDataSetChanged()
+                    bitPricerAdapter.notifyDataSetChanged()
+                    bigSpenderAdapter.notifyDataSetChanged()
+                }
 
-            override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
-                Log.i(TAG, "onFailure $t")
-            }
-        })
-
+                override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
+                    Log.i(TAG, "onFailure $t")
+                }
+            })
     }
 
     private fun categorizeItems(restaurants: MutableList<YelpRestaurants>) {
+        costEffectiveList.clear()
+        bitPricerList.clear()
+        bigSpenderList.clear()
+
         for (restaurant in restaurants) {
             val restaurantPrice: String = restaurant.price
             if (restaurantPrice == "$") {
@@ -126,10 +145,29 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        println(costEffectiveList)
-        println(bitPricerList)
-        println(bigSpenderList)
+//        println("costEffectiveList: $costEffectiveList")
+//        println("bitPricerList: $bitPricerList")
+//        println("bigSpenderList: $bigSpenderList")
 
+    }
+
+    private fun searchRestaurants() {
+        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                println("Search Query: $query")
+                if (query != null) {
+                    searchTerm = query
+                    getRestaurants()
+                } else {
+                    Log.i(TAG, "Invalid Input")
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
     }
 
 }

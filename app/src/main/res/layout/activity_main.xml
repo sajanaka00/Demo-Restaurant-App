@@ -32,7 +32,7 @@
                 android:fontFamily="@font/merri_weather"
                 android:text="@string/cost_effective"
                 android:textColor="@color/black"
-                android:textSize="32sp" />
+                android:textSize="24sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/costEffectiveRV"
@@ -51,7 +51,7 @@
                 android:fontFamily="@font/merri_weather"
                 android:text="@string/bit_pricer"
                 android:textColor="@color/black"
-                android:textSize="32sp" />
+                android:textSize="24sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/bitPricerRV"
@@ -69,7 +69,7 @@
                 android:layout_marginTop="15dp"
                 android:text="@string/big_spender"
                 android:textColor="@color/black"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:fontFamily="@font/merri_weather"/>
 
             <androidx.recyclerview.widget.RecyclerView

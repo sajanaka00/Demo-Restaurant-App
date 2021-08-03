@@ -27,8 +27,12 @@ class DisplayMenuImages : AppCompatActivity() {
         setContentView(R.layout.activity_display_menu_images)
 
         id = intent.getSerializableExtra(RESTAURANT_ID) as String
-
         rvDisplayMenu = findViewById(R.id.displayMenuRV)
+
+        val retrofit =
+            Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
+                .build()
+        val yelpService = retrofit.create(YelpService::class.java)
 
         rvDisplayMenu.layoutManager = LinearLayoutManager(this)
         val displayMenuImagesAdapter = ImagesAdapter(this, photos)
@@ -36,11 +40,6 @@ class DisplayMenuImages : AppCompatActivity() {
 
         println(id)
 
-        val retrofit =
-            Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-        val yelpService = retrofit.create(YelpFusionService::class.java)
         yelpService.getDetails("Bearer $API_KEY", id)
             .enqueue(object : Callback<YelpBusinessDetail> {
                 override fun onResponse(
@@ -55,7 +54,8 @@ class DisplayMenuImages : AppCompatActivity() {
                     }
                     photos.addAll(body.photos.drop(1))
                     displayMenuImagesAdapter.notifyDataSetChanged()
-                    println(photos)
+
+//                    println(photos)
                 }
 
                 override fun onFailure(call: Call<YelpBusinessDetail>, t: Throwable) {
