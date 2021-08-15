@@ -16,9 +16,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModel: RestaurantsViewModel
 
     private val retrofitService = YelpService.getInstance()
-    val costEffectiveAdapter = RestaurantsAdapter()
-    val bitPricerAdapter = RestaurantsAdapter()
-    val bigSpenderAdapter = RestaurantsAdapter()
+
+    private val costEffectiveAdapter = RestaurantsAdapter()
+    private val bitPricerAdapter = RestaurantsAdapter()
+    private val bigSpenderAdapter = RestaurantsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

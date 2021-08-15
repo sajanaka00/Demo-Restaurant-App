@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.demorestaurantapp.databinding.RecyclerRestaurantsBinding
 
+// create adapter for the recyclerview to set all the items into recyclerview
+
 class RestaurantsAdapter : RecyclerView.Adapter<MainViewHolder>() {
 
     var restaurants = mutableListOf<YelpRestaurants>()

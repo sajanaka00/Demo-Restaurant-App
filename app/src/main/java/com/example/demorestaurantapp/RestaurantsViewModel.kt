@@ -8,6 +8,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/*
+    * ViewModel class having the business logic and API call implementations
+    * In the ViewModel constructor, we need to pass the data repository to handle the data
+*/
+
 class RestaurantsViewModel constructor(private val repository: RestaurantsRepository) : ViewModel() {
 
     val restaurants = MutableLiveData<List<YelpRestaurants>>()
