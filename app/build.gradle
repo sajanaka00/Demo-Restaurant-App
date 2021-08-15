@@ -46,23 +46,15 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.google.android.material:material:1.4.0'
+
+    //ViewModel and livedata
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     //Retrofit
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.google.code.gson:gson:2.8.7'
-    //RX
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.11'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    //Image Loading
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    //Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-    //Yelp
-    implementation 'io.github.ranga543:yelp-fusion-client:0.1.4'
-    //Timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

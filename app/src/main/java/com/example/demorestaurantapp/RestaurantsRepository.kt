@@ -1,18 +1,14 @@
 package com.example.demorestaurantapp
 
-import androidx.lifecycle.MutableLiveData
-import com.yelp.fusion.client.models.Business
+private const val API_KEY = "ImI1man5FXDZTZz2g7mmZ3_ChOU55GqU7OFfFaBj6ObY_E5s9_" +
+        "OAmz2dpQcUdlGV1dwqnE-GMLudXpUxjUxNl--BCb0SJaXPYTbSnI8l9mibhGf2raVwcfkUCOb_YHYx"
 
-class RestaurantsRepository {
+class RestaurantsRepository constructor(private val yelpService: YelpService) {
 
-    private val yelpService = YelpService()
-    private val yelpApi = yelpService.createApi()
-
-    var data: MutableLiveData<List<Business>> = MutableLiveData<List<Business>>()
-
-    fun search(): MutableLiveData<List<Business>> {
-        data = yelpApi.search() as MutableLiveData<List<Business>>
-        return data
-    }
+    fun getAllMovies() = yelpService.searchRestaurants(
+        "Bearer $API_KEY",
+        "Pizza",
+        "New York"
+    )
 
 }
