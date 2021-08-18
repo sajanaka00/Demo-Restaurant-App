@@ -1,6 +1,6 @@
 package com.example.demorestaurantapp
 
-import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,25 +23,25 @@ class RestaurantsViewModel constructor(private val repository: RestaurantsReposi
 
     val errorMessage = MutableLiveData<String>()
 
-    fun getAllMovies() {
+    fun getRestaurants() {
 
-        val response = repository.getAllMovies()
+        val response = repository.getRestaurants()
         response.enqueue(object : Callback<YelpSearchResult> {
             override fun onResponse(
                 call: Call<YelpSearchResult>,
                 response: Response<YelpSearchResult>
             ) {
-                Log.i(ContentValues.TAG, "onResponse $response")
+                Log.i(TAG, "onResponse $response")
                 val body = response.body()
                 if (body == null) {
-                    Log.w(ContentValues.TAG, "Did not receive valid response body from Yelp API")
+                    Log.w(TAG, "Did not receive valid response body from Yelp API")
                     return
                 }
                 restaurants.postValue(body.restaurants)
             }
 
             override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
-                Log.i(ContentValues.TAG, "onFailure $t")
+                Log.i(TAG, "onFailure $t")
                 errorMessage.postValue(t.message)
             }
         })
@@ -49,6 +49,9 @@ class RestaurantsViewModel constructor(private val repository: RestaurantsReposi
     }
 
     fun categorizeItems(restaurants: List<YelpRestaurants>) {
+//        costEffectiveList.clear()
+//        bitPricerList.clear()
+//        bigSpenderList.clear()
 
         for (restaurant in restaurants) {
             val restaurantPrice: String = restaurant.price
@@ -67,5 +70,24 @@ class RestaurantsViewModel constructor(private val repository: RestaurantsReposi
         println("bitPricerList: $bitPricerList")
         println("bigSpenderList: $bigSpenderList")
     }
+
+//    fun searchRestaurants(searchBar: SearchView) {
+//        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                println("Search Query: $query")
+//                if (query != null) {
+//                    repository.searchTerm = query
+//                    getRestaurants()
+//                } else {
+//                    Log.i(TAG, "Invalid Input")
+//                }
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//        })
+//    }
 
 }

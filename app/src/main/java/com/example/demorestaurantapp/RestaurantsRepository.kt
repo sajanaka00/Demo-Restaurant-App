@@ -10,9 +10,11 @@ private const val API_KEY = "ImI1man5FXDZTZz2g7mmZ3_ChOU55GqU7OFfFaBj6ObY_E5s9_"
 
 class RestaurantsRepository constructor(private val yelpService: YelpService) {
 
-    fun getAllMovies() = yelpService.searchRestaurants(
+    var searchTerm = "Pizza"
+
+    fun getRestaurants() = yelpService.searchRestaurants(
         "Bearer $API_KEY",
-        "Pizza",
+        searchTerm,
         "New York"
     )
 

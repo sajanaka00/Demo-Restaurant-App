@@ -2,6 +2,7 @@ package com.example.demorestaurantapp
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,14 +22,21 @@ class MainActivity : AppCompatActivity() {
     private val bitPricerAdapter = RestaurantsAdapter()
     private val bigSpenderAdapter = RestaurantsAdapter()
 
+    private lateinit var searchBar: SearchView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        searchBar = findViewById(R.id.search_bar)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, RestaurantsViewModelFactory(RestaurantsRepository(retrofitService))).get(RestaurantsViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            RestaurantsViewModelFactory(RestaurantsRepository(retrofitService)))
+            .get(RestaurantsViewModel::class.java)
 
         val costEffLayoutManager = LinearLayoutManager(applicationContext)
         costEffLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -63,7 +71,8 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        viewModel.getAllMovies()
+        viewModel.getRestaurants()
+//        viewModel.searchRestaurants(searchBar)
     }
 
 }
