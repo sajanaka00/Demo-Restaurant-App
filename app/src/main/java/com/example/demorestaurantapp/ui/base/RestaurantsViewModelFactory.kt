@@ -1,7 +1,9 @@
-package com.example.demorestaurantapp
+package com.example.demorestaurantapp.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.demorestaurantapp.ui.main.viewmodel.RestaurantsViewModel
+import com.example.demorestaurantapp.data.repository.RestaurantsRepository
 
 /*
     * We can not create ViewModel on our own.

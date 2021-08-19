@@ -1,5 +1,7 @@
-package com.example.demorestaurantapp
+package com.example.demorestaurantapp.data.api
 
+import com.example.demorestaurantapp.data.model.YelpBusinessDetail
+import com.example.demorestaurantapp.data.model.YelpSearchResult
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

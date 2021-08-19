@@ -1,9 +1,12 @@
-package com.example.demorestaurantapp
+package com.example.demorestaurantapp.ui.main.viewmodel
 
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.demorestaurantapp.data.model.YelpRestaurants
+import com.example.demorestaurantapp.data.model.YelpSearchResult
+import com.example.demorestaurantapp.data.repository.RestaurantsRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
