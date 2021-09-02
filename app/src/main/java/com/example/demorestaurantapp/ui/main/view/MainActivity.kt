@@ -1,6 +1,5 @@
 package com.example.demorestaurantapp.ui.main.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.SearchView
@@ -8,29 +7,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.demorestaurantapp.R
-import com.example.demorestaurantapp.ui.main.viewmodel.RestaurantsViewModel
 import com.example.demorestaurantapp.data.api.YelpService
 import com.example.demorestaurantapp.data.repository.RestaurantsRepository
-import com.example.demorestaurantapp.databinding.ActivityMainBinding
 import com.example.demorestaurantapp.ui.base.RestaurantsViewModelFactory
-import com.example.demorestaurantapp.ui.main.adapter.RestaurantsAdapter
+import com.example.demorestaurantapp.data.model.ParentModel
+import com.example.demorestaurantapp.ui.main.adapter.ParentAdapter
+import com.example.demorestaurantapp.ui.main.viewmodel.RestaurantsViewModel
 
 const val RESTAURANT_ID = "RESTAURANT_ID"
 
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
-    private lateinit var binding: ActivityMainBinding
 
     lateinit var viewModel: RestaurantsViewModel
-
     private val retrofitService = YelpService.getInstance()
-
-    private lateinit var costEffectiveAdapter : RestaurantsAdapter
-    private lateinit var bitPricerAdapter : RestaurantsAdapter
-    private lateinit var bigSpenderAdapter : RestaurantsAdapter
-
+    private val items: ArrayList<ParentModel> = ArrayList()
     private lateinit var searchBar: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,52 +33,13 @@ class MainActivity : AppCompatActivity() {
 
         searchBar = findViewById(R.id.search_bar)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         viewModel = ViewModelProvider(
             this,
             RestaurantsViewModelFactory(RestaurantsRepository(retrofitService))
         ).get(RestaurantsViewModel::class.java)
 
-        val costEffLayoutManager = LinearLayoutManager(applicationContext)
-        costEffLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        binding.costEffectiveRV.layoutManager = costEffLayoutManager
-
-        costEffectiveAdapter = RestaurantsAdapter(object : RestaurantsAdapter.OnClickListener {
-            override fun onItemClick(position: Int) {
-                val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
-                intent.putExtra(RESTAURANT_ID, viewModel.costEffectiveList[position].id)
-                startActivity(intent)
-            }
-        })
-        binding.costEffectiveRV.adapter = costEffectiveAdapter
-
-        val bitPricerLayoutManager = LinearLayoutManager(applicationContext)
-        bitPricerLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        binding.bitPricerRV.layoutManager = bitPricerLayoutManager
-
-        bitPricerAdapter = RestaurantsAdapter(object : RestaurantsAdapter.OnClickListener {
-            override fun onItemClick(position: Int) {
-                val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
-                intent.putExtra(RESTAURANT_ID, viewModel.bitPricerList[position].id)
-                startActivity(intent)
-            }
-        })
-        binding.bitPricerRV.adapter = bitPricerAdapter
-
-        val bigSpenderLayoutManager = LinearLayoutManager(applicationContext)
-        bigSpenderLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        binding.bigSpenderRV.layoutManager = bigSpenderLayoutManager
-
-        bigSpenderAdapter = RestaurantsAdapter(object : RestaurantsAdapter.OnClickListener {
-            override fun onItemClick(position: Int) {
-                val intent = Intent(this@MainActivity, DisplayMenuImages::class.java)
-                intent.putExtra(RESTAURANT_ID, viewModel.bigSpenderList[position].id)
-                startActivity(intent)
-            }
-        })
-        binding.bigSpenderRV.adapter = bigSpenderAdapter
+        viewModel.getRestaurants()
+//        viewModel.searchRestaurants(searchBar)
 
         // The observer will only receive events if the owner is in STARTED or RESUMED state
         /* Params:
@@ -95,17 +50,43 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "onCreate: $it")
             viewModel.categorizeItems(it)
 
-            costEffectiveAdapter.setRestaurantList(viewModel.costEffectiveList)
-            bitPricerAdapter.setRestaurantList(viewModel.bitPricerList)
-            bigSpenderAdapter.setRestaurantList(viewModel.bigSpenderList)
+            getItems().let { items.addAll(it) }
+
+            val adapter = ParentAdapter(this, items)
+
+            val recyclerView: RecyclerView = findViewById(R.id.parentRecyclerView)
+            recyclerView.setHasFixedSize(true)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = adapter
         })
 
         viewModel.errorMessage.observe(this, Observer {
 
         })
+    }
 
-        viewModel.getRestaurants()
-//        viewModel.searchRestaurants(searchBar)
+    private fun getItems(): ArrayList<ParentModel> {
+        val items = ArrayList<ParentModel>()
+
+        val item1 = ParentModel()
+        item1.title = "Cost Effective"
+        item1.items.addAll(viewModel.costEffectiveList)
+
+        items.add(item1)
+
+        val item2 = ParentModel()
+        item2.title = "Bit Pricer"
+        item2.items.addAll(viewModel.bitPricerList)
+
+        items.add(item2)
+
+        val item3 = ParentModel()
+        item3.title = "Big Spender"
+        item3.items.addAll(viewModel.bigSpenderList)
+
+        items.add(item3)
+
+        return items
     }
 
 }

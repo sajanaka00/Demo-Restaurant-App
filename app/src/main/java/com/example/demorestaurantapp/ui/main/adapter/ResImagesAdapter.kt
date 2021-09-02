@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.demorestaurantapp.data.model.YelpBusinessDetail
-import com.example.demorestaurantapp.databinding.RecyclerRestaurantsBinding
+import com.example.demorestaurantapp.databinding.RecyclerMenuImagesBinding
 
 class ResImagesAdapter : RecyclerView.Adapter<RIViewHolder>() {
 
-    var restaurantImages = mutableListOf<String>()
+    private var restaurantImages = mutableListOf<String>()
 
     fun setRestaurantList(restaurantImages: List<String>) {
         this.restaurantImages = restaurantImages.toMutableList()
@@ -18,13 +18,13 @@ class ResImagesAdapter : RecyclerView.Adapter<RIViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RIViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = RecyclerRestaurantsBinding.inflate(inflater, parent, false)
+        val binding = RecyclerMenuImagesBinding.inflate(inflater, parent, false)
         return RIViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RIViewHolder, position: Int) {
         val photos = restaurantImages[position]
-        Glide.with(holder.itemView.context).load(photos).into(holder.binding.image)
+        Glide.with(holder.itemView.context).load(photos).into(holder.binding.menuImage)
     }
 
     override fun getItemCount(): Int {
@@ -33,5 +33,6 @@ class ResImagesAdapter : RecyclerView.Adapter<RIViewHolder>() {
 
 }
 
-class RIViewHolder(val binding: RecyclerRestaurantsBinding)
+class RIViewHolder(
+    val binding: RecyclerMenuImagesBinding)
     : RecyclerView.ViewHolder(binding.root) {}

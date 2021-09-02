@@ -5,6 +5,9 @@
       <map>
         <entry key="..\:/AndroidStudioProjects/Demo-Restaurant-App/app/src/main/res/layout/activity_display_menu_images.xml" value="0.1286231884057971" />
         <entry key="..\:/AndroidStudioProjects/Demo-Restaurant-App/app/src/main/res/layout/activity_main.xml" value="0.1118659420289855" />
+        <entry key="..\:/AndroidStudioProjects/Demo-Restaurant-App/app/src/main/res/layout/child_recycler_view.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/Demo-Restaurant-App/app/src/main/res/layout/item_section.xml" value="0.13496376811594202" />
+        <entry key="..\:/AndroidStudioProjects/Demo-Restaurant-App/app/src/main/res/layout/item_todo.xml" value="0.13496376811594202" />
         <entry key="..\:/AndroidStudioProjects/Demo-Restaurant-App/app/src/main/res/layout/recycler_menu_images.xml" value="0.1286231884057971" />
         <entry key="..\:/AndroidStudioProjects/Demo-Restaurant-App/app/src/main/res/layout/recycler_restaurants.xml" value="0.10960144927536232" />
         <entry key="..\:/AndroidStudioProjects/DemoRestaurantApp/app/src/main/res/layout/activity_main.xml" value="0.1118659420289855" />
