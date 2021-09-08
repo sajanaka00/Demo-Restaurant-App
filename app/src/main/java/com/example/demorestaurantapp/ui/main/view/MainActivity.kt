@@ -21,10 +21,10 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     lateinit var viewModel: RestaurantsViewModel
-
-    private val retrofitService = YelpService.getInstance()
     private val items: ArrayList<ParentModel> = ArrayList()
     private lateinit var searchBar: SearchView
+
+//    private val retrofitService = YelpService.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(RestaurantsViewModel::class.java)
 
         viewModel.getRestaurants()
-//        viewModel.searchRestaurants(searchBar)
+        viewModel.searchRestaurants(searchBar)
 
         // The observer will only receive events if the owner is in STARTED or RESUMED state
         /* Params:

@@ -70,9 +70,9 @@ class RestaurantsViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun categorizeItems(restaurants: List<YelpRestaurants>) {
-//        costEffectiveList.clear()
-//        bitPricerList.clear()
-//        bigSpenderList.clear()
+        costEffectiveList.clear()
+        bitPricerList.clear()
+        bigSpenderList.clear()
 
         for (restaurant in restaurants) {
             val restaurantPrice: String = restaurant.price
@@ -92,23 +92,23 @@ class RestaurantsViewModel(application: Application) : AndroidViewModel(applicat
         println("bigSpenderList: $bigSpenderList")
     }
 
-//    fun searchRestaurants(searchBar: SearchView) {
-//        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                println("Search Query: $query")
-//                if (query != null) {
-//                    searchTerm = query
-//                    getRestaurants()
-//                } else {
-//                    Log.i(TAG, "Invalid Input")
-//                }
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return false
-//            }
-//        })
-//    }
+    fun searchRestaurants(searchBar: SearchView) {
+        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                println("Search Query: $query")
+                if (query != null) {
+                    searchTerm = query
+                    getRestaurants()
+                } else {
+                    Log.i(TAG, "Invalid Input")
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+    }
 
 }
