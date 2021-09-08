@@ -1,22 +1,32 @@
 package com.example.demorestaurantapp.ui.main.viewmodel
 
+import android.app.Application
 import android.content.ContentValues.TAG
 import android.util.Log
+import android.widget.SearchView
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.demorestaurantapp.MyApplication
+import com.example.demorestaurantapp.data.api.YelpService
 import com.example.demorestaurantapp.data.model.YelpRestaurants
 import com.example.demorestaurantapp.data.model.YelpSearchResult
-import com.example.demorestaurantapp.data.repository.RestaurantsRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 /*
     * ViewModel class having the business logic and API call implementations
     * In the ViewModel constructor, we need to pass the data repository to handle the data
 */
 
-class RestaurantsViewModel constructor(private val repository: RestaurantsRepository) : ViewModel() {
+private const val API_KEY = "ImI1man5FXDZTZz2g7mmZ3_ChOU55GqU7OFfFaBj6ObY_E5s9_" +
+        "OAmz2dpQcUdlGV1dwqnE-GMLudXpUxjUxNl--BCb0SJaXPYTbSnI8l9mibhGf2raVwcfkUCOb_YHYx"
+
+class RestaurantsViewModel(application: Application) : AndroidViewModel(application) {
+
+    @Inject
+    lateinit var mService: YelpService
 
     val restaurants = MutableLiveData<List<YelpRestaurants>>()
 
@@ -26,10 +36,18 @@ class RestaurantsViewModel constructor(private val repository: RestaurantsReposi
 
     val errorMessage = MutableLiveData<String>()
 
+    var searchTerm = "Pizza"
+
+    init {
+        (application as MyApplication).getRetroComponent().inject(this)
+    }
+
     fun getRestaurants() {
 
-        val response = repository.getRestaurants()
-        response.enqueue(object : Callback<YelpSearchResult> {
+        val call: Call<YelpSearchResult> =
+            mService.searchRestaurants("Bearer $API_KEY", searchTerm, "New York")
+
+        call.enqueue(object : Callback<YelpSearchResult> {
             override fun onResponse(
                 call: Call<YelpSearchResult>,
                 response: Response<YelpSearchResult>
@@ -79,7 +97,7 @@ class RestaurantsViewModel constructor(private val repository: RestaurantsReposi
 //            override fun onQueryTextSubmit(query: String?): Boolean {
 //                println("Search Query: $query")
 //                if (query != null) {
-//                    repository.searchTerm = query
+//                    searchTerm = query
 //                    getRestaurants()
 //                } else {
 //                    Log.i(TAG, "Invalid Input")

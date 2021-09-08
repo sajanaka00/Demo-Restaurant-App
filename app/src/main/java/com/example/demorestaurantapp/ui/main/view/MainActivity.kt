@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demorestaurantapp.R
 import com.example.demorestaurantapp.data.api.YelpService
-import com.example.demorestaurantapp.data.repository.RestaurantsRepository
-import com.example.demorestaurantapp.ui.base.RestaurantsViewModelFactory
 import com.example.demorestaurantapp.data.model.ParentModel
 import com.example.demorestaurantapp.ui.main.adapter.ParentAdapter
 import com.example.demorestaurantapp.ui.main.viewmodel.RestaurantsViewModel
@@ -23,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
     lateinit var viewModel: RestaurantsViewModel
+
     private val retrofitService = YelpService.getInstance()
     private val items: ArrayList<ParentModel> = ArrayList()
     private lateinit var searchBar: SearchView
@@ -33,10 +32,17 @@ class MainActivity : AppCompatActivity() {
 
         searchBar = findViewById(R.id.search_bar)
 
-        viewModel = ViewModelProvider(
-            this,
-            RestaurantsViewModelFactory(RestaurantsRepository(retrofitService))
-        ).get(RestaurantsViewModel::class.java)
+        initViewModel()
+
+//        viewModel = ViewModelProvider(
+//            this,
+//            RestaurantsViewModelFactory(RestaurantsRepository(retrofitService))
+//        ).get(RestaurantsViewModel::class.java)
+
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this).get(RestaurantsViewModel::class.java)
 
         viewModel.getRestaurants()
 //        viewModel.searchRestaurants(searchBar)
