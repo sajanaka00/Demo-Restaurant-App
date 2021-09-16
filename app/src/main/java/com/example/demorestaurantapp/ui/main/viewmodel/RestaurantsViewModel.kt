@@ -25,6 +25,7 @@ private const val API_KEY = "ImI1man5FXDZTZz2g7mmZ3_ChOU55GqU7OFfFaBj6ObY_E5s9_"
 
 class RestaurantsViewModel(application: Application) : AndroidViewModel(application) {
 
+    // injecting the retrofit service
     @Inject
     lateinit var mService: YelpService
 
@@ -39,6 +40,7 @@ class RestaurantsViewModel(application: Application) : AndroidViewModel(applicat
     var searchTerm = "Pizza"
 
     init {
+        // here we need to init application
         (application as MyApplication).getRetroComponent().inject(this)
     }
 
