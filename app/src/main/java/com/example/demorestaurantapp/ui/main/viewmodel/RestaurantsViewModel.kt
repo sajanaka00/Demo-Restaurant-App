@@ -2,59 +2,45 @@ package com.example.demorestaurantapp.ui.main.viewmodel
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import android.widget.SearchView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.demorestaurantapp.data.model.YelpRestaurants
-import com.example.demorestaurantapp.data.model.YelpSearchResult
 import com.example.demorestaurantapp.data.repository.RestaurantsRepository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /*
     * ViewModel class having the business logic and API call implementations
     * In the ViewModel constructor, we need to pass the data repository to handle the data
 */
 
-class RestaurantsViewModel constructor(private val repository: RestaurantsRepository) : ViewModel() {
+@HiltViewModel
+class RestaurantsViewModel @Inject constructor(private val repository: RestaurantsRepository) : ViewModel() {
 
-    val restaurants = MutableLiveData<List<YelpRestaurants>>()
+    var restaurants: MutableLiveData<List<YelpRestaurants>>
 
     val costEffectiveList = ArrayList<YelpRestaurants>()
     val bitPricerList = ArrayList<YelpRestaurants>()
     val bigSpenderList = ArrayList<YelpRestaurants>()
 
-    val errorMessage = MutableLiveData<String>()
+    init {
+        restaurants = MutableLiveData()
+    }
 
-    fun getRestaurants() {
+    fun getLiveDataObserver(): MutableLiveData<List<YelpRestaurants>>{
+        return restaurants
+    }
 
-        val response = repository.getRestaurants()
-        response.enqueue(object : Callback<YelpSearchResult> {
-            override fun onResponse(
-                call: Call<YelpSearchResult>,
-                response: Response<YelpSearchResult>
-            ) {
-                Log.i(TAG, "onResponse $response")
-                val body = response.body()
-                if (body == null) {
-                    Log.w(TAG, "Did not receive valid response body from Yelp API")
-                    return
-                }
-                restaurants.postValue(body.restaurants)
-            }
-
-            override fun onFailure(call: Call<YelpSearchResult>, t: Throwable) {
-                Log.i(TAG, "onFailure $t")
-                errorMessage.postValue(t.message)
-            }
-        })
-
+    // function to make the api call
+    fun loadListOfData() {
+        repository.makeApiCall(restaurants)
     }
 
     fun categorizeItems(restaurants: List<YelpRestaurants>) {
-//        costEffectiveList.clear()
-//        bitPricerList.clear()
-//        bigSpenderList.clear()
+        costEffectiveList.clear()
+        bitPricerList.clear()
+        bigSpenderList.clear()
 
         for (restaurant in restaurants) {
             val restaurantPrice: String = restaurant.price
@@ -74,23 +60,23 @@ class RestaurantsViewModel constructor(private val repository: RestaurantsReposi
         println("bigSpenderList: $bigSpenderList")
     }
 
-//    fun searchRestaurants(searchBar: SearchView) {
-//        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                println("Search Query: $query")
-//                if (query != null) {
-//                    repository.searchTerm = query
-//                    getRestaurants()
-//                } else {
-//                    Log.i(TAG, "Invalid Input")
-//                }
-//                return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return false
-//            }
-//        })
-//    }
+    fun searchRestaurants(searchBar: SearchView) {
+        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                println("Search Query: $query")
+                if (query != null) {
+                    repository.searchTerm = query
+                    repository.makeApiCall(restaurants)
+                } else {
+                    Log.i(TAG, "Invalid Input")
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+    }
 
 }

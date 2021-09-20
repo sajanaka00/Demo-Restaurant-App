@@ -3,27 +3,29 @@ package com.example.demorestaurantapp.ui.main.view
 import android.os.Bundle
 import android.util.Log
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demorestaurantapp.R
-import com.example.demorestaurantapp.data.api.YelpService
-import com.example.demorestaurantapp.data.repository.RestaurantsRepository
-import com.example.demorestaurantapp.ui.base.RestaurantsViewModelFactory
 import com.example.demorestaurantapp.data.model.ParentModel
 import com.example.demorestaurantapp.ui.main.adapter.ParentAdapter
 import com.example.demorestaurantapp.ui.main.viewmodel.RestaurantsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 const val RESTAURANT_ID = "RESTAURANT_ID"
 
+/* @AndroidEntryPoint - Marks an Android component class to be setup for injection with the
+    standard Hilt Dagger Android components.
+ */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
 
     lateinit var viewModel: RestaurantsViewModel
-    private val retrofitService = YelpService.getInstance()
     private val items: ArrayList<ParentModel> = ArrayList()
     private lateinit var searchBar: SearchView
 
@@ -33,40 +35,41 @@ class MainActivity : AppCompatActivity() {
 
         searchBar = findViewById(R.id.search_bar)
 
-        viewModel = ViewModelProvider(
-            this,
-            RestaurantsViewModelFactory(RestaurantsRepository(retrofitService))
-        ).get(RestaurantsViewModel::class.java)
+        initViewModel()
+        viewModel.searchRestaurants(searchBar)
+    }
 
-        viewModel.getRestaurants()
-//        viewModel.searchRestaurants(searchBar)
+    private fun initViewModel() {
+        viewModel = ViewModelProvider(this).get(RestaurantsViewModel::class.java)
 
         // The observer will only receive events if the owner is in STARTED or RESUMED state
         /* Params:
             owner – The LifecycleOwner which controls the observer
             observer – The observer that will receive the events
          */
-        viewModel.restaurants.observe(this, Observer {
-            Log.d(TAG, "onCreate: $it")
-            viewModel.categorizeItems(it)
+        viewModel.getLiveDataObserver().observe(this, Observer {
+            if(it != null) {
+                Log.d(TAG, "onCreate: $it")
+                viewModel.categorizeItems(it)
 
-            getItems().let { items.addAll(it) }
+                getItems().let { items.addAll(it) }
 
-            val adapter = ParentAdapter(this, items)
+                val adapter = ParentAdapter(this, items)
 
-            val recyclerView: RecyclerView = findViewById(R.id.parentRecyclerView)
-            recyclerView.setHasFixedSize(true)
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = adapter
+                val recyclerView: RecyclerView = findViewById(R.id.parentRecyclerView)
+                recyclerView.setHasFixedSize(true)
+                recyclerView.layoutManager = LinearLayoutManager(this)
+                recyclerView.adapter = adapter
+            } else {
+                Toast.makeText(this, "error in getting data", Toast.LENGTH_SHORT).show()
+            }
         })
-
-        viewModel.errorMessage.observe(this, Observer {
-
-        })
+        viewModel.loadListOfData()
     }
 
     private fun getItems(): ArrayList<ParentModel> {
         val items = ArrayList<ParentModel>()
+        items.clear()
 
         val item1 = ParentModel()
         item1.title = "Cost Effective"
