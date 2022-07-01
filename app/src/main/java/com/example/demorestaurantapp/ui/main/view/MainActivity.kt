@@ -17,8 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 const val RESTAURANT_ID = "RESTAURANT_ID"
 
-/* @AndroidEntryPoint - Marks an Android component class to be setup for injection with the
-    standard Hilt Dagger Android components.
+/* Once Hilt is set up in your Application class and an application-level component is available,
+   Hilt can provide dependencies to other Android classes that have the @AndroidEntryPoint annotation
  */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

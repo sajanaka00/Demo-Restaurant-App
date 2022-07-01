@@ -11,6 +11,11 @@ import javax.inject.Singleton
 
 // this class will basically return the retrofit object
 
+/*
+   @Module. Like a Dagger module, it informs Hilt how to provide instances of certain types.
+   @InstallIn to tell Hilt which Android class each module will be used or installed in.
+ */
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
